@@ -1,0 +1,14 @@
+#!/bin/sh
+DST=$1
+SRC=$2
+
+if [ "$#" -lt 2 ]; then
+  echo "Usage: $0 <destination_name> <cloud_image_source>"
+  exit 1
+fi
+
+. $(dirname $0)/functions.sh
+
+
+set -ev
+download "$SRC" "images/$DST"

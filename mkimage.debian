@@ -1,10 +1,9 @@
 #!/bin/sh
-DST=$1
+NAME=$1
 SIZE=$2
-SRC=$3
 
-if [ "$#" -lt 3 ]; then
-  echo "Usage: $0 <destination_image> <size> <cloud_image_source>"
+if [ "$#" -lt 2 ]; then
+  echo "Usage: $0 <image_name> <size>"
   exit 1
 fi
 
@@ -12,10 +11,12 @@ fi
 
 
 set -ev
-download_and_unpack "$SRC" "$DST.orig"
+
+SRC="images/$NAME.qcow2"
+DST="dest/$NAME.qcow2"
+
 create_empty_image "$DST" "$SIZE"
-copy_fs "$DST.orig" /dev/sda1 / "$DST" /dev/sda1 /
-rm -f "$DST.orig"
+copy_fs "$SRC" /dev/sda1 / "$DST" /dev/sda1 /
 
 gf_listen
 gf add-drive "$DST"
