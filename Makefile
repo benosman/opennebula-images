@@ -8,6 +8,7 @@ all: \
 	images/alpine-3.11 \
 	images/ubuntu-16.04 \
 	images/ubuntu-18.04 \
+	images/ubuntu-docker-18.04 \
 	images/debian-9 \
 	images/devuan-2 \
 	images/centos-6 \
@@ -42,6 +43,9 @@ images/ubuntu-16.04:
 
 images/ubuntu-18.04:
 	./mkimage.ubuntu ubuntu-18.04 2G
+
+images/ubuntu-docker-18.04:
+	./mkimage.ubuntu_docker ubuntu-18.04 ubuntu-docker-18.04 2G
 
 images/debian-9:
 	./mkimage.debian debian-9 2G

@@ -1,0 +1,35 @@
+#!/bin/sh
+SRC_NAME=$1
+DST_NAME=$2
+SIZE=$3
+
+if [ "$#" -lt 3 ]; then
+  echo "Usage: $0 <src_name> <dst_name> <size>"
+  exit 1
+fi
+
+SRC="dest/$SRC_NAME.qcow2"
+DST="dest/$DST_NAME.qcow2"
+
+. $(dirname $0)/functions.sh
+
+set -ev
+
+create_empty_image "$DST" "$SIZE"
+copy_fs "$SRC" /dev/sda1 / "$DST" /dev/sda1 /
+
+gf_listen
+gf add-drive "$DST"
+gf run
+gf mount /dev/sda1 /
+
+# install docker
+gf command "apt-get update"
+gf command "wget https://releases.rancher.com/install-docker/19.03.sh -O /install-docker.sh"
+gf command "sh /install-docker.sh"
+gf rm_f "/install-docker.sh"
+gf command "apt-get clean"
+
+gf umount-all
+gf exit
+
