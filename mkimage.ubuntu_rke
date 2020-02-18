@@ -1,0 +1,36 @@
+#!/bin/sh
+SRC_NAME=$1
+DST_NAME=$2
+SIZE=$3
+RKE_VERSION=${4:-"1-17-2-rancher1-2"}    
+
+if [ "$#" -lt 3 ]; then
+  echo "Usage: $0 <src_name> <dst_name> <size> <rke_version>"
+  exit 1
+fi
+
+SRC="dest/$SRC_NAME.qcow2"
+DST="dest/$DST_NAME.qcow2"
+
+. $(dirname $0)/functions.sh
+
+set -ev
+
+create_empty_image "$DST" "$SIZE"
+copy_fs "$SRC" /dev/sda1 / "$DST" /dev/sda1 /
+
+gf_listen
+gf add-drive "$DST"
+gf run
+gf mount /dev/sda1 /
+
+# pre-pull rke images
+gf upload "rke/${RKE_VERSION}.txt" "/rke_images.txt"
+gf upload "rke/pull-rke-images.sh" "/pull-rke-images.sh"
+gf command "bash /pull-rke-images.sh /rke_images.txt"
+gf rm_f "/rke_images.txt"
+gf rm_f "/pull-rke-images.sh"
+
+gf umount-all
+gf exit
+

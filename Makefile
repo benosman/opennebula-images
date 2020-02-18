@@ -9,6 +9,7 @@ all: \
 	images/ubuntu-16.04 \
 	images/ubuntu-18.04 \
 	images/ubuntu-docker-18.04 \
+	images/ubuntu-rke-18.04 \
 	images/debian-9 \
 	images/devuan-2 \
 	images/centos-6 \
@@ -46,6 +47,9 @@ images/ubuntu-18.04:
 
 images/ubuntu-docker-18.04:
 	./mkimage.ubuntu_docker ubuntu-18.04 ubuntu-docker-18.04 2G
+
+images/ubuntu-rke-18.04:
+	./mkimage.ubuntu_rke ubuntu-docker-18.04 ubuntu-rke-18.04 5G
 
 images/debian-9:
 	./mkimage.debian debian-9 2G
